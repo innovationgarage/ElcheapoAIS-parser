@@ -34,10 +34,8 @@ class StatusObject(dbus.service.Object):
                             'no.innovationgarage.elcheapoais.config', '/no/innovationgarage/elcheapoais/receiver'
                         ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"])
                         self.station_id = msg["mmsi"]
-                        print("Set station id to %s" % msg["mmsi"])
                     except Exception as e:
                         print(e)
-            print("XXXXXXXXX", msg)
             self.NMEA(json.dumps(msg))
         return True
         
