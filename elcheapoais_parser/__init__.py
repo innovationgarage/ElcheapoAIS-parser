@@ -20,11 +20,24 @@ class StatusObject(dbus.service.Object):
         dbus.service.Object.__init__(self, manager.bus, object_path)
         self.manager = manager
         self.nmea_queue = queue.Queue()
+        self.station_id = None
         gi.repository.GLib.timeout_add(100, self.send_nmea)
 
     def send_nmea(self):
         while not self.nmea_queue.empty():
             msg = self.nmea_queue.get(False)
+            if "AIVDO" in msg["nmea"]:
+                msg["own_ship"] = True
+                if not self.station_id:
+                    try:
+                        self.manager.bus.get_object(
+                            'no.innovationgarage.elcheapoais.config', '/no/innovationgarage/elcheapoais/receiver'
+                        ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"])
+                        self.station_id = msg["mmsi"]
+                        print("Set station id to %s" % msg["mmsi"])
+                    except Exception as e:
+                        print(e)
+            print("XXXXXXXXX", msg)
             self.NMEA(json.dumps(msg))
         return True
         
