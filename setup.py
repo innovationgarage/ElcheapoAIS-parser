@@ -14,7 +14,8 @@ setuptools.setup(name='elcheapoais-parser',
       install_requires=[
           "libais==0.17",
           "PyGObject",
-          "dbus-python==1.2.12"
+          "dbus-python==1.2.12",
+          "pyserial"
       ],
       include_package_data=True,
       entry_points='''
