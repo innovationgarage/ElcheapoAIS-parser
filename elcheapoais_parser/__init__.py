@@ -3,6 +3,7 @@ import dbus.service
 import dbus.mainloop.glib
 import gi.repository.GLib
 import sys
+import os
 import threading
 import ais.stream
 import ais.compatibility.gpsd
@@ -65,8 +66,8 @@ class DBusThread(threading.Thread):
         print("END")
     
 class Manager(object):
-    def __init__(self, filename, bus_name="SessionBus"):
-        dbus_thread = DBusThread(bus_name)
+    def __init__(self, filename):
+        dbus_thread = DBusThread(os.environ.get("ELCHEAPOAIS_DBUS", "SystemBus"))
         dbus_thread.start()
         
         with open(filename) as f:
