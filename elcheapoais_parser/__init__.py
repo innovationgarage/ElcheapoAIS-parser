@@ -104,7 +104,6 @@ class ReaderThread(threading.Thread):
                         self.station_id = msg["mmsi"]
                     except Exception as e:
                         print(e)
-            print(msg)
             self.manager.dbus_thread.status.NMEA(json.dumps(msg))
         print("Shutting down ReaderThread...")
 
