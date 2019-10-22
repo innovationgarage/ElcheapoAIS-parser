@@ -44,12 +44,12 @@ class Reader(object):
     def open(self):
         self.close()
         if "filename" in self.kws:
-            self.f = open(self.kws["filename"])
+            self.f = open(self.kws["filename"], 'rb')
         elif "port" in self.kws:
             self.f = serial.Serial(**self.kws)
         else:
             raise Exception("You must specify either filename or port")
-        self.stream = iter(ais.stream.decode(self.f, keep_nmea=True))
+        self.stream = iter(ais.stream.decode((l.strip().decode("utf-8") for l in self.f), keep_nmea=True))
 
     def close(self):
         if self.f:
@@ -100,7 +100,7 @@ class ReaderThread(threading.Thread):
                     try:
                         self.manager.dbus_thread.bus.get_object(
                             'no.innovationgarage.elcheapoais.config', '/no/innovationgarage/elcheapoais/receiver'
-                        ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"])
+                        ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"], dbus_interface="org.freedesktop.DBus.Properties")
                         self.station_id = msg["mmsi"]
                     except Exception as e:
                         print(e)
