@@ -44,7 +44,7 @@ class Reader(object):
     def open(self):
         self.close()
         if "filename" in self.kws:
-            self.f = open(self.kws["filename"], "rb")
+            self.f = open(self.kws["filename"], 'rb')
         elif "port" in self.kws:
             self.f = serial.Serial(**self.kws)
         else:
@@ -103,7 +103,7 @@ class ReaderThread(threading.Thread):
                     try:
                         self.manager.dbus_thread.bus.get_object(
                             'no.innovationgarage.elcheapoais.config', '/no/innovationgarage/elcheapoais/receiver'
-                        ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"])
+                        ).Set("no.innovationgarage.elcheapoais.receiver", "station_id", msg["mmsi"], dbus_interface="org.freedesktop.DBus.Properties")
                         self.station_id = msg["mmsi"]
                     except Exception as e:
                         print(e)
