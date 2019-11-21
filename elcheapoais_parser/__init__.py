@@ -44,12 +44,14 @@ class Reader(object):
     def open(self):
         self.close()
         if "filename" in self.kws:
-            self.f = open(self.kws["filename"])
+            self.f = open(self.kws["filename"], "rb")
         elif "port" in self.kws:
             self.f = serial.Serial(**self.kws)
         else:
             raise Exception("You must specify either filename or port")
-        self.stream = iter(ais.stream.decode(self.f, keep_nmea=True))
+        self.stream = iter(ais.stream.decode(
+            (line.decode("utf-8").strip() for line in self.f),
+            keep_nmea=True))
 
     def close(self):
         if self.f:
@@ -60,7 +62,8 @@ class Reader(object):
         while True:
             try:
                 return next(self.stream)
-            except:
+            except Exception as e:
+                print("Error reading stream: %s" % e)
                 if "filename" in self.kws:
                     raise StopIteration
                 time.sleep(0.1)
