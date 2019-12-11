@@ -13,6 +13,7 @@ setuptools.setup(name='elcheapoais-parser',
       packages=setuptools.find_packages(),
       install_requires=[
           "libais==0.17",
+          "pycairo",
           "PyGObject",
           "dbus-python==1.2.12",
           "pyserial"
